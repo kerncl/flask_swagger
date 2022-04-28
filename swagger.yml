@@ -1,0 +1,206 @@
+swagger: '2.0'
+info:
+  title: Sample Swagger
+  version:  1.0.0
+  description: This is the Sample Swagger file that goes with our server code
+  contact:
+    name: Linn Kern
+    email: kerncl@hotmail.com
+
+basePath: /api
+
+paths:
+  /test:
+    get:
+      summary: "Summary: Summary  Section"
+      description: >
+        We can use this symbol for
+        multiple line
+      operationId: api.api.TestApi
+      tags:
+        - Test
+      responses:
+        200:
+          description: "Description for response"
+          schema:
+            type: object
+            properties:
+              Message:
+                type: string
+              Time:
+                type: string
+                pattern: '^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$'
+
+
+  /data:
+    get:
+      summary: "Query All data"
+      description: "Query all the data from database"
+      operationId: api.api.getAll
+      tags:
+        - Data
+      responses:
+        200:
+          description: "Return a list of data from database"
+          schema:
+            type: array
+            items:
+              properties:
+                Data:
+                  type: string
+
+    post:
+      summary: "Post data"
+      description: "Post data into database"
+      operationId: api.api.postdata
+      tags:
+        - Data
+      consumes:
+        - application/json
+      parameters:
+        - name: testdata
+          in: body
+          description: Post data into database
+          required: True
+          schema:
+            type: object
+            properties:
+              Data:
+                type: string
+                description: Information of the data
+                example: "123"
+      responses:
+        201:
+          $ref: '#/responses/201Create'
+        404:
+          $ref: '#/responses/404BadRequest'
+
+  /data/{testname}:
+    get:
+      summary: "Query Specific testname"
+      description: "Query on given testname"
+      operationId: api.api.getTestname
+      tags:
+        - Data
+      parameters:
+        - $ref: '#/parameters/Testname'
+      responses:
+        200:
+          $ref: '#/responses/200Okay'
+        404:
+          $ref: '#/responses/404BadRequest'
+
+    post:
+      summary: "Post test to database"
+      description: "Post test to database"
+      operationId: api.api.postTestname
+      tags:
+        - Data
+      consumes:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/Testname'
+        - $ref: '#/parameters/TestContent'
+      responses:
+        201:
+          $ref: '#/responses/201Create'
+        404:
+          $ref: '#/responses/404BadRequest'
+    put:
+      summary: "Edit existing test content to database"
+      description: "Edit test content"
+      operationId: api.api.putTestname
+      tags:
+        - Data
+      consumes:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/Testname'
+        - $ref: '#/parameters/TestContent'
+      responses:
+        200:
+          $ref: '#/responses/200Okay'
+    delete:
+      summary: "Delete testname from database"
+      description: "Delete testname from database"
+      operationId: api.api.deleteTestname
+      tags:
+        - Data
+      parameters:
+        - $ref: '#/parameters/Testname'
+      responses:
+        200:
+          $ref: '#/responses/200Okay'
+        404:
+          $ref: '#/responses/404BadRequest'
+  /data/{Test}:
+    get:
+      deprecated: True
+      operationId: api.api.dummy
+      tags:
+        - Data
+      parameters:
+        - name: Test
+          in: path
+          description: Test name
+          type: string
+          required: True
+      responses:
+        200:
+          $ref: '#/responses/200Okay'
+
+  /file:
+    post:
+      summary: "Upload Json file"
+      description: "Post a json file"
+      operationId: api.api.getJsonfile
+      tags:
+        - File
+      consumes:
+        - multipart/form-data
+      parameters:
+        - in: formData
+          name: jsonfile
+          type: file
+          description: The file to upload
+          required: True
+      responses:
+        201:
+          $ref: '#/responses/201Create'
+        404:
+          $ref: '#/responses/404BadRequest'
+
+responses:
+  200Okay:
+    description: OK
+  201Create:
+    description: Created!
+  404BadRequest:
+    description: Bad Request
+
+parameters:
+  Testname:
+    name: testname
+    in: path
+    required: True
+    type: string
+    description: Testname of the test
+  TestContent:
+    name: Test Content
+    in: body
+    required: True
+    schema:
+      type: object
+      properties:
+        Data:
+          type: string
+          description: Information of the data
+          example: "Information bla bla bla"
+
+
+
+
+
+
+
+
